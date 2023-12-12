@@ -1,5 +1,31 @@
 # Note on Lab 0
 
+## Data Augmentation
+
+在讀取 CIFAR10 時，可以注意到針對 training dataset 會額外做一些 transfroms，
+
+這邊主要就是在做 data augmentation，為了緩解 overfitting 的問題，我們透過對資料做額外的前處理，如這邊的 cropping 和 flipping。
+
+```
+transforms = {
+  "train": Compose([
+    RandomCrop(32, padding=4),
+    RandomHorizontalFlip(),
+    ToTensor(),
+  ]),
+  "test": ToTensor(),
+}
+
+dataset = {}
+for split in ["train", "test"]:
+  dataset[split] = CIFAR10(
+    root="data/cifar10",
+    train=(split == "train"),
+    download=True,
+    transform=transforms[split],
+  )
+```
+
 ## Paged-lock Memory
 
 在創建 data loader 時，這裡下了一個 ```pin_memory=True``` 的 arguments：
